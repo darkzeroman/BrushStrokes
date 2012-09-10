@@ -4,19 +4,9 @@ package brushstrokes;
  * 
  */
 
-/**
- * @author darkzeroman
- * 
- */
 public class BrushStrokes {
 
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		int ret = minNumErrors("BBWW", 0, 1);
-		System.out.println(ret);
 	}
 
 	static String currString;
@@ -32,13 +22,17 @@ public class BrushStrokes {
 			return currString.length() - index + 1;
 		if (index == currString.length())
 			return 0;
-
+		/*
+		 * if come across this character, end the current stroke 
+		 */
 		if (currString.charAt(index) == '-')
 			return recCall(index + 1, numStrokesLeft, 0);
 
 		int currMin;
 		if (currStroke != 0) {
-			// continuing current stroke
+			// can't switch stroke 0 to 1 or 2, so make sure it's
+			// either stroke 1 or 2
+			// continuing stroke
 			currMin = err(index, currStroke)
 					+ recCall(index + 1, numStrokesLeft, currStroke);
 			// switch stroke
@@ -47,8 +41,7 @@ public class BrushStrokes {
 					+ recCall(index + 1, numStrokesLeft - 1, switchedStroke);
 			currMin = Math.min(currMin, possibleMin);
 		} else {
-			// previously the stroke was zero, so options are to have stroke 1
-			// or 2
+			// previously was stroke 0, so options are to have stroke 1 or 2
 			currMin = err(index, 1) + recCall(index + 1, numStrokesLeft - 1, 1);
 			int possibleMin = err(index, 2)
 					+ recCall(index + 1, numStrokesLeft - 1, 2);
@@ -56,11 +49,16 @@ public class BrushStrokes {
 		}
 
 		// no stroke
-		currMin = Math.min(currMin, 1 + recCall(index + 1, numStrokesLeft, 0));
+		int possibleMin = 1 + recCall(index + 1, numStrokesLeft, 0);
+		currMin = Math.min(currMin, possibleMin);
 		return currMin;
 
 	}
 
+	/*
+	 * compares the char at an index with the current stroke and returns if
+	 * there is an error
+	 */
 	public static int err(int index, int currStroke) {
 		char letter = currString.charAt(index);
 
@@ -71,13 +69,14 @@ public class BrushStrokes {
 				return 0;
 			else
 				return 1;
-		} else if (letter == 'W')
+		} else if (letter == 'W') // currStroke is 2
 			return 0;
 		else
 			return 1;
 
 	}
 
+	// if 1, return 2, else 1
 	public static int switchStroke(int currStroke) {
 		return currStroke == 1 ? 2 : 1;
 	}

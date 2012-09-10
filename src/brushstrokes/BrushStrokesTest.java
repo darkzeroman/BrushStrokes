@@ -33,6 +33,7 @@ public class BrushStrokesTest {
 		assertEquals(0, BrushStrokes.minNumErrors("WW-BB", 2, 0));
 
 		assertEquals(4, BrushStrokes.minNumErrors("WWWW-WBWB-BBBB", 2, 0));
+		assertEquals(2, BrushStrokes.minNumErrors("WWWW-WBWB-BBBB", 3, 0));
 
 	}
 }
